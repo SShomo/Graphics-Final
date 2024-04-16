@@ -63,8 +63,17 @@ int main() {
 	glCullFace(GL_BACK); //Back face culling
 	glEnable(GL_DEPTH_TEST); //Depth testing
 
-	GLuint brickTexture = ew::loadTexture("assets/foil_normal_gl.jpg");
-	GLuint colorTexture = ew::loadTexture("assets/foil_color.jpg");
+	GLuint foilNormalGL = ew::loadTexture("assets/foil_normal_gl.jpg");
+	GLuint foilColor = ew::loadTexture("assets/foil_color.jpg");
+
+	GLuint concreteColor = ew::loadTexture("assets/concrete_color.jpg");
+	GLuint concreteNormalGL = ew::loadTexture("assets/concrete_normal_gl.jpg");
+
+	GLuint sandColor = ew::loadTexture("assets/sand_color.jpg");
+	GLuint sandNormalGL = ew::loadTexture("assets/sand_normal_gl.jpg");
+
+	GLuint tileColor = ew::loadTexture("assets/tile_color.jpg");
+	GLuint tileNormalGL = ew::loadTexture("assets/tile_normal_gl.jpg");
 
 
 	shader.use();
@@ -77,8 +86,8 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		//RENDER
 
-		glBindTextureUnit(0, brickTexture);
-		glBindTextureUnit(1, colorTexture);
+		glBindTextureUnit(0, foilNormalGL);
+		glBindTextureUnit(1, foilColor);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.fbo);
 		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
