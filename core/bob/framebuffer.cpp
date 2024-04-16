@@ -13,7 +13,6 @@ bob::Framebuffer bob::createFramebufferWithRBO(unsigned int width, unsigned int 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo.fbo); // Bind the new FBO as the active one
 
 	//Color Buffer
-
 	glGenTextures(1, &fbo.colorBuffer[0]);
 	glBindTexture(GL_TEXTURE_2D, fbo.colorBuffer[0]);
 	glTexStorage2D(GL_TEXTURE_2D, 1, colorFormat, fbo.width, fbo.height);

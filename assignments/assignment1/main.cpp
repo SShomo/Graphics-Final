@@ -63,8 +63,14 @@ int main() {
 	glCullFace(GL_BACK); //Back face culling
 	glEnable(GL_DEPTH_TEST); //Depth testing
 
-	GLuint foilNormalGL = ew::loadTexture("assets/foil_normal_gl.jpg");
-	GLuint foilColor = ew::loadTexture("assets/foil_color.jpg");
+	GLuint christmasNormalGL = ew::loadTexture("assets/sand_normal_gl.jpg");
+	GLuint christmasColor = ew::loadTexture("assets/sand_color.jpg");
+
+	GLuint porceNormalGL = ew::loadTexture("assets/porcelain_normal_gl.jpg");
+	GLuint porceColor = ew::loadTexture("assets/porcelain_color.jpg");
+
+	GLuint rockNormalGL = ew::loadTexture("assets/rock_normal_gl.jpg");
+	GLuint rockColor = ew::loadTexture("assets/rock_color.jpg");
 
 	GLuint concreteColor = ew::loadTexture("assets/concrete_color.jpg");
 	GLuint concreteNormalGL = ew::loadTexture("assets/concrete_normal_gl.jpg");
@@ -77,8 +83,8 @@ int main() {
 
 
 	shader.use();
-	shader.setInt("normalMap", 0);
-	shader.setInt("_MainTex", 1);
+	shader.setInt("_MainTex", 0);
+	shader.setInt("normalMap", 1);
 
 	unsigned int dummyVAO;
 	glCreateVertexArrays(1, &dummyVAO);
@@ -86,8 +92,8 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		//RENDER
 
-		glBindTextureUnit(0, foilNormalGL);
-		glBindTextureUnit(1, foilColor);
+		glBindTextureUnit(0, christmasColor);
+		glBindTextureUnit(1, christmasNormalGL);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.fbo);
 		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -125,6 +131,8 @@ int main() {
 
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, framebuffer.colorBuffer[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		drawUI();

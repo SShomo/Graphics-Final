@@ -1,5 +1,5 @@
 #version 450
-out vec4 FragColor; //The color of this fragment
+layout(location = 0) out vec4 FragColor; //The color of this fragment
 in Surface{
 	vec3 WorldPos; //Vertex position in world space
 	vec3 WorldNormal; //Vertex normal in world space
@@ -45,9 +45,9 @@ void main(){
 	//Combination of specular and diffuse reflection
 	vec3 lightColor = (_Material.Kd * diffuseFactor + _Material.Ks * specularFactor) * _LightColor;
 	lightColor+=_AmbientColor * _Material.Ka;
-	vec3 objectColor = texture(_MainTex,fs_in.TexCoord).rrr;
+	vec3 objectColor = texture(_MainTex,fs_in.TexCoord).rgb;
 
-	vec3 color = 1.0-texture(_ColorBuffer,fs_in.UV).rgb;
+	//vec3 color = 1.0-texture(_ColorBuffer,fs_in.UV).rgb;
 
 	FragColor = vec4(objectColor * lightColor,1.0);
 }
