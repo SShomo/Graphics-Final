@@ -53,6 +53,14 @@ int main() {
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
 
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
+	ew::Transform monkeyTransform;
+
+	ew::Model sandModel = ew::Model("assets/suzanne.obj");
+	ew::Model christmasModel = ew::Model("assets/suzanne.obj");
+	ew::Model porceModel = ew::Model("assets/suzanne.obj");
+	ew::Model rockModel = ew::Model("assets/suzanne.obj");
+	ew::Model concreteModel = ew::Model("assets/suzanne.obj");
+	ew::Model tileModel = ew::Model("assets/suzanne.obj");
 
 	camera.position = glm::vec3(0.0f, 0.0f, 5.0f);
 	camera.target = glm::vec3(0.0f, 0.0f, 0.0f); //Look at the center of the scene
@@ -63,8 +71,8 @@ int main() {
 	glCullFace(GL_BACK); //Back face culling
 	glEnable(GL_DEPTH_TEST); //Depth testing
 
-	GLuint christmasNormalGL = ew::loadTexture("assets/sand_normal_gl.jpg");
-	GLuint christmasColor = ew::loadTexture("assets/sand_color.jpg");
+	GLuint christmasNormalGL = ew::loadTexture("assets/christmas_normal_gl.jpg");
+	GLuint christmasColor = ew::loadTexture("assets/christmas_color.jpg");
 
 	GLuint porceNormalGL = ew::loadTexture("assets/porcelain_normal_gl.jpg");
 	GLuint porceColor = ew::loadTexture("assets/porcelain_color.jpg");
@@ -116,10 +124,21 @@ int main() {
 		shader.setFloat("_Material.Shininess", material.Shininess);
 		shader.setMat4("_Model", monkeyTransform.modelMatrix());
 
-
 		monkeyModel.draw(); //Draws monkey model using current shader
+
+		glBindTextureUnit(0, sandColor);
+		glBindTextureUnit(1, sandNormalGL);
+		monkeyTransform.position = glm::vec3(3, 0, 0);
+		shader.setFloat("_Material.Ka", material.Ka);
+		shader.setFloat("_Material.Kd", material.Kd);
+		shader.setFloat("_Material.Ks", material.Ks);
+		shader.setFloat("_Material.Shininess", material.Shininess);
+		shader.setMat4("_Model", monkeyTransform.modelMatrix());
+		
+		sandModel.draw(); //Draws monkey model using current shader
+
 		cameraController.move(window, &camera, deltaTime);
-		monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		//monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
