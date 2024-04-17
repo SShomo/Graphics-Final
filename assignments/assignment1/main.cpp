@@ -15,8 +15,6 @@
 #include <imgui_impl_opengl3.h>
 #include <bob/framebuffer.h>
 
-
-
 void resetCamera(ew::Camera* camera, ew::CameraController* controller);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 GLFWwindow* initWindow(const char* title, int width, int height);
@@ -26,6 +24,14 @@ void drawUI();
 ew::Transform monkeyTransform;
 ew::Camera camera;
 ew::CameraController cameraController;
+
+float rimThres = 5.4f;
+float rimCut = 0.1f;
+glm::vec3 lightColor = glm::vec3(1.0f);
+glm::vec3 objColor = glm::vec3(1.0f);
+glm::vec3 lightOrbitCenter = glm::vec3(0, 3.0f, 0);
+float lightOrbitRadius = 5.0f;
+float lightOrbitSpeed = 1.0f;
 
 struct Material {
 	float Ka = 1.0;
@@ -50,17 +56,26 @@ int main() {
 
 	bob::Framebuffer framebuffer = bob::createFramebufferWithRBO(screenWidth, screenHeight, GL_RGB16F);
 	ew::Shader ppShader = ew::Shader("assets/pp.vert", "assets/pp.frag");
+	ew::Shader toonShader = ew::Shader("assets/toon.vert", "assets/toon.frag");
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
 
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
-	ew::Transform monkeyTransform;
 
-	ew::Model sandModel = ew::Model("assets/suzanne.obj");
-	ew::Model christmasModel = ew::Model("assets/suzanne.obj");
-	ew::Model porceModel = ew::Model("assets/suzanne.obj");
-	ew::Model rockModel = ew::Model("assets/suzanne.obj");
-	ew::Model concreteModel = ew::Model("assets/suzanne.obj");
-	ew::Model tileModel = ew::Model("assets/suzanne.obj");
+	ew::Transform monkeyTransform;
+	ew::Transform sandTransform;
+	ew::Transform christmasTransform;
+	ew::Transform porceTransform;
+	ew::Transform rockTransform;
+	ew::Transform concreteTransform;
+	ew::Transform tileTransform;
+
+	monkeyTransform.position = glm::vec3(0.0f, 5.0f, 5.0f);
+	sandTransform.position = glm::vec3(3.0f, 0.0f, 0.0f);
+	christmasTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	porceTransform.position = glm::vec3(6.0f, 0.0f, 0.0f);
+	rockTransform.position = glm::vec3(-6.0f, 0.0f, 0.0f);
+	concreteTransform.position = glm::vec3(9.0f, 0.0f, 0.0f);
+	tileTransform.position = glm::vec3(-3.0f, 0.0f, 0.0f);
 
 	camera.position = glm::vec3(0.0f, 0.0f, 5.0f);
 	camera.target = glm::vec3(0.0f, 0.0f, 0.0f); //Look at the center of the scene
@@ -89,7 +104,6 @@ int main() {
 	GLuint tileColor = ew::loadTexture("assets/tile_color.jpg");
 	GLuint tileNormalGL = ew::loadTexture("assets/tile_normal_gl.jpg");
 
-
 	shader.use();
 	shader.setInt("_MainTex", 0);
 	shader.setInt("normalMap", 1);
@@ -100,8 +114,7 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		//RENDER
 
-		glBindTextureUnit(0, christmasColor);
-		glBindTextureUnit(1, christmasNormalGL);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.fbo);
 		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -122,23 +135,55 @@ int main() {
 		shader.setFloat("_Material.Kd", material.Kd);
 		shader.setFloat("_Material.Ks", material.Ks);
 		shader.setFloat("_Material.Shininess", material.Shininess);
-		shader.setMat4("_Model", monkeyTransform.modelMatrix());
-
-		monkeyModel.draw(); //Draws monkey model using current shader
-
+		//shader.setMat4("_Model", monkeyTransform.modelMatrix());
+		//monkeyModel.draw(); //Draws monkey model using current shader
 		glBindTextureUnit(0, sandColor);
 		glBindTextureUnit(1, sandNormalGL);
-		monkeyTransform.position = glm::vec3(3, 0, 0);
-		shader.setFloat("_Material.Ka", material.Ka);
-		shader.setFloat("_Material.Kd", material.Kd);
-		shader.setFloat("_Material.Ks", material.Ks);
-		shader.setFloat("_Material.Shininess", material.Shininess);
-		shader.setMat4("_Model", monkeyTransform.modelMatrix());
+		shader.setMat4("_Model", sandTransform.modelMatrix());
+		//toonShader.setMat4("_Model", sandTransform.modelMatrix());
+		monkeyModel.draw();
+
+		glBindTextureUnit(0, christmasColor);
+		glBindTextureUnit(1, christmasNormalGL);
+		shader.setMat4("_Model", christmasTransform.modelMatrix());
+		//toonShader.setMat4("_Model", christmasTransform.modelMatrix());
+		monkeyModel.draw();
+
+		glBindTextureUnit(0, porceColor);
+		glBindTextureUnit(1, porceNormalGL);
+		shader.setMat4("_Model", porceTransform.modelMatrix());
+		//toonShader.setMat4("_Model", porceTransform.modelMatrix());
+		monkeyModel.draw();
+
+		glBindTextureUnit(0, rockColor);
+		glBindTextureUnit(1, rockNormalGL);
+		shader.setMat4("_Model", rockTransform.modelMatrix());
+		//toonShader.setMat4("_Model", rockTransform.modelMatrix());
+		monkeyModel.draw();
+
+		glBindTextureUnit(0, concreteColor);
+		glBindTextureUnit(1, concreteNormalGL);
+		shader.setMat4("_Model", concreteTransform.modelMatrix());
+		//toonShader.setMat4("_Model", concreteTransform.modelMatrix());
+		monkeyModel.draw();
 		
-		sandModel.draw(); //Draws monkey model using current shader
+		glBindTextureUnit(0, tileColor);
+		glBindTextureUnit(1, tileNormalGL);
+		shader.setMat4("_Model", tileTransform.modelMatrix());
+		//toonShader.setMat4("_Model", tileTransform.modelMatrix());
+		monkeyModel.draw();
 
 		cameraController.move(window, &camera, deltaTime);
 		//monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+
+	
+		toonShader.use();
+		toonShader.setMat4("normal", camera.projectionMatrix() * camera.viewMatrix());
+		toonShader.setVec3("eyePos", camera.position);
+		toonShader.setVec3("lightPos", monkeyTransform.position);
+		toonShader.setFloat("ambientK", material.Ka);
+		toonShader.setFloat("rimK", material.Kd);
+		toonShader.setFloat("specularK", material.Ks);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -173,6 +218,17 @@ void drawUI() {
 		ImGui::SliderFloat("SpecularK", &material.Ks, 0.0f, 1.0f);
 		ImGui::SliderFloat("Shininess", &material.Shininess, 2.0f, 1024.0f);
 
+	}
+
+	if (ImGui::CollapsingHeader("Toon Shading"))
+	{
+		ImGui::SliderFloat("Rim Threshold", &rimThres, 2.0f, 15.0f);
+		ImGui::SliderFloat("Rim CutOff", &rimCut, 0.1f, 0.5f);
+		ImGui::ColorEdit3("Obj Color", &objColor.r);
+		ImGui::ColorEdit3("Light Color", &lightColor.r);
+		ImGui::SliderFloat3("Light Orbit Center", &lightOrbitCenter.r, -5.0f, 5.0f);
+		ImGui::SliderFloat("Light Orbit Radius", &lightOrbitRadius, 0.0f, 5.0f);
+		ImGui::SliderFloat("Light Orbit Speed", &lightOrbitSpeed, 0.0f, 3.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Image Convolution")) {
