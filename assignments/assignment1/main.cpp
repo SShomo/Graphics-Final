@@ -49,6 +49,10 @@ float prevFrameTime;
 float gamma = 1.0f;
 float deltaTime;
 
+glm::vec3 edgeColor = glm::vec3(1.0f);
+float outlineX = 1.0;
+float outlineY = 1.0;
+
 int main() {
 
 	GLFWwindow* window = initWindow("Assignment 1", screenWidth, screenHeight);
@@ -57,6 +61,7 @@ int main() {
 	bob::Framebuffer framebuffer = bob::createFramebufferWithRBO(screenWidth, screenHeight, GL_RGB16F);
 	ew::Shader ppShader = ew::Shader("assets/pp.vert", "assets/pp.frag");
 	ew::Shader toonShader = ew::Shader("assets/toon.vert", "assets/toon.frag");
+	ew::Shader outlineShader = ew::Shader("assets/outline.vert", "assets/outline.frag");
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
 
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
@@ -188,11 +193,17 @@ int main() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		outlineShader.use();
+		outlineShader.setVec3("EdgeColor", edgeColor);
+		outlineShader.setFloat("outlineX", outlineX);
+		outlineShader.setFloat("outlineY", outlineY);
+
+		/*
 		ppShader.use();
 		ppShader.setFloat("_Blur", blurEffect);
 		ppShader.setFloat("_gamma", gamma);
 		ppShader.setInt("_Kernal", kernal);
-
+		*/
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
 		glActiveTexture(GL_TEXTURE1);
@@ -229,6 +240,13 @@ void drawUI() {
 		ImGui::SliderFloat3("Light Orbit Center", &lightOrbitCenter.r, -5.0f, 5.0f);
 		ImGui::SliderFloat("Light Orbit Radius", &lightOrbitRadius, 0.0f, 5.0f);
 		ImGui::SliderFloat("Light Orbit Speed", &lightOrbitSpeed, 0.0f, 3.0f);
+	}
+
+	if (ImGui::CollapsingHeader("Sobel Edge"))
+	{
+		ImGui::ColorEdit3("Edge Color", &edgeColor.r);
+		ImGui::SliderFloat("Outline Size X", &outlineX, 0.0f, 1.0f);
+		ImGui::SliderFloat("Outline Size Y", &outlineY, 0.0f, 1.0f);
 	}
 
 	if (ImGui::CollapsingHeader("Image Convolution")) {
