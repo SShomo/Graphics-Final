@@ -49,9 +49,10 @@ float prevFrameTime;
 float gamma = 1.0f;
 float deltaTime;
 
-glm::vec3 edgeColor = glm::vec3(1.0f);
+glm::vec3 edgeColor = glm::vec3(0.0f);
 float outlineX = 1.0;
 float outlineY = 1.0;
+float offset = 1.0;
 
 int main() {
 
@@ -191,7 +192,14 @@ int main() {
 		outlineShader.setVec3("EdgeColor", edgeColor);
 		outlineShader.setFloat("outlineX", outlineX);
 		outlineShader.setFloat("outlineY", outlineY);
-
+		outlineShader.setFloat("offset", offset);
+	
+	/*
+		ppShader.use();
+		ppShader.setFloat("_Blur", blurEffect);
+		ppShader.setFloat("_gamma", gamma);
+		ppShader.setInt("_Kernal", kernal);
+	*/
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
 		glActiveTexture(GL_TEXTURE1);
@@ -230,6 +238,7 @@ void drawUI() {
 		ImGui::ColorEdit3("Edge Color", &edgeColor.r);
 		ImGui::SliderFloat("Outline Size X", &outlineX, 0.0f, 1.0f);
 		ImGui::SliderFloat("Outline Size Y", &outlineY, 0.0f, 1.0f);
+		ImGui::SliderFloat("Offset", &offset, -5.0f, 5.0f);
 	}
 
 	if (ImGui::Button("Reset Camera")) {
