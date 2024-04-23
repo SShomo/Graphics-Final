@@ -197,13 +197,13 @@ int main() {
 		outlineShader.setVec3("EdgeColor", edgeColor);
 		outlineShader.setFloat("outlineX", outlineX);
 		outlineShader.setFloat("outlineY", outlineY);
-
-		/*
+	
+	/*
 		ppShader.use();
 		ppShader.setFloat("_Blur", blurEffect);
 		ppShader.setFloat("_gamma", gamma);
 		ppShader.setInt("_Kernal", kernal);
-		*/
+	*/
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
 		glActiveTexture(GL_TEXTURE1);

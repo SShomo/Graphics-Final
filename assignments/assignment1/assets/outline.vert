@@ -1,7 +1,5 @@
 #version 450
-layout(location = 2) in vec2 vTexCoord;
 out vec2 UV;
-out vec2 _TexCoord;
 
 vec4 vertices[3] = {
 	vec4(-1,-1, 0, 0), //Bottom left (X,Y,U,V)
@@ -10,7 +8,6 @@ vec4 vertices[3] = {
 };
 
 void main(){
-	_TexCoord = vTexCoord;
 	UV = vertices[gl_VertexID].zw;
 	gl_Position = vec4(vertices[gl_VertexID].xy,0,1);
 }

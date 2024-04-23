@@ -1,6 +1,5 @@
 #version 450
 layout (location = 0) out vec4 FragColor;
-in vec2 _TexCoord;
 in vec2 UV;
 
 mat3 edgeX = mat3( 
@@ -21,7 +20,7 @@ uniform float outlineY;
 
 void main()
 {
-    vec3 diff = texture(normalMap, _TexCoord.st).rgb;
+    vec3 diff = texture(normalMap, UV.st).rgb;
     mat3 I;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -40,4 +39,5 @@ void main()
 
 
     FragColor = vec4(mix(diff, EdgeColor, g), 1.0);
+
 } 
