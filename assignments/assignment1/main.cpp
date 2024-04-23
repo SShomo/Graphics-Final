@@ -66,6 +66,9 @@ int main() {
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
 
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
+	ew::Model bunnyModel = ew::Model("assets/stanford-bunny.obj");
+	ew::Model womanModel = ew::Model("assets/bimba.obj");
+	ew::Model teaModel = ew::Model("assets/teapot.obj");
 
 	ew::Transform monkeyTransform;
 	ew::Transform sandTransform;
@@ -82,6 +85,8 @@ int main() {
 	rockTransform.position = glm::vec3(-6.0f, 0.0f, 0.0f);
 	concreteTransform.position = glm::vec3(9.0f, 0.0f, 0.0f);
 	tileTransform.position = glm::vec3(-3.0f, 0.0f, 0.0f);
+
+	//christmasTransform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	camera.position = glm::vec3(0.0f, 0.0f, 5.0f);
 	camera.target = glm::vec3(0.0f, 0.0f, 0.0f); //Look at the center of the scene
