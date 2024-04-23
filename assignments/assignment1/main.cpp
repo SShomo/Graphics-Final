@@ -140,55 +140,49 @@ int main() {
 		shader.setFloat("_Material.Kd", material.Kd);
 		shader.setFloat("_Material.Ks", material.Ks);
 		shader.setFloat("_Material.Shininess", material.Shininess);
+
+		shader.setFloat("rimK", rimCut);
+		shader.setFloat("rimThres", rimThres);
 		//shader.setMat4("_Model", monkeyTransform.modelMatrix());
 		//monkeyModel.draw(); //Draws monkey model using current shader
 		glBindTextureUnit(0, sandColor);
 		glBindTextureUnit(1, sandNormalGL);
 		shader.setMat4("_Model", sandTransform.modelMatrix());
-		//toonShader.setMat4("_Model", sandTransform.modelMatrix());
 		monkeyModel.draw();
 
 		glBindTextureUnit(0, christmasColor);
 		glBindTextureUnit(1, christmasNormalGL);
 		shader.setMat4("_Model", christmasTransform.modelMatrix());
-		//toonShader.setMat4("_Model", christmasTransform.modelMatrix());
 		monkeyModel.draw();
 
 		glBindTextureUnit(0, porceColor);
 		glBindTextureUnit(1, porceNormalGL);
 		shader.setMat4("_Model", porceTransform.modelMatrix());
-		//toonShader.setMat4("_Model", porceTransform.modelMatrix());
 		monkeyModel.draw();
 
 		glBindTextureUnit(0, rockColor);
 		glBindTextureUnit(1, rockNormalGL);
 		shader.setMat4("_Model", rockTransform.modelMatrix());
-		//toonShader.setMat4("_Model", rockTransform.modelMatrix());
 		monkeyModel.draw();
 
 		glBindTextureUnit(0, concreteColor);
 		glBindTextureUnit(1, concreteNormalGL);
 		shader.setMat4("_Model", concreteTransform.modelMatrix());
-		//toonShader.setMat4("_Model", concreteTransform.modelMatrix());
 		monkeyModel.draw();
 		
 		glBindTextureUnit(0, tileColor);
 		glBindTextureUnit(1, tileNormalGL);
 		shader.setMat4("_Model", tileTransform.modelMatrix());
-		//toonShader.setMat4("_Model", tileTransform.modelMatrix());
 		monkeyModel.draw();
 
 		cameraController.move(window, &camera, deltaTime);
-		//monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
-
-	
-		toonShader.use();
-		toonShader.setMat4("normal", camera.projectionMatrix() * camera.viewMatrix());
-		toonShader.setVec3("eyePos", camera.position);
-		toonShader.setVec3("lightPos", monkeyTransform.position);
-		toonShader.setFloat("ambientK", material.Ka);
-		toonShader.setFloat("rimK", material.Kd);
-		toonShader.setFloat("specularK", material.Ks);
+		//Spin all the models
+		christmasTransform.rotation = glm::rotate(christmasTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		sandTransform.rotation = glm::rotate(sandTransform.rotation, deltaTime, glm::vec3(0.1, 0.0, 0.0));
+		//rockTransform.rotation = glm::rotate(rockTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		//concreteTransform.rotation = glm::rotate(concreteTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		//tileTransform.rotation = glm::rotate(tileTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		//porceTransform.rotation = glm::rotate(porceTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -197,13 +191,7 @@ int main() {
 		outlineShader.setVec3("EdgeColor", edgeColor);
 		outlineShader.setFloat("outlineX", outlineX);
 		outlineShader.setFloat("outlineY", outlineY);
-	
-	/*
-		ppShader.use();
-		ppShader.setFloat("_Blur", blurEffect);
-		ppShader.setFloat("_gamma", gamma);
-		ppShader.setInt("_Kernal", kernal);
-	*/
+
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
 		glActiveTexture(GL_TEXTURE1);
@@ -233,13 +221,8 @@ void drawUI() {
 
 	if (ImGui::CollapsingHeader("Toon Shading"))
 	{
-		ImGui::SliderFloat("Rim Threshold", &rimThres, 2.0f, 15.0f);
-		ImGui::SliderFloat("Rim CutOff", &rimCut, 0.1f, 0.5f);
-		ImGui::ColorEdit3("Obj Color", &objColor.r);
-		ImGui::ColorEdit3("Light Color", &lightColor.r);
-		ImGui::SliderFloat3("Light Orbit Center", &lightOrbitCenter.r, -5.0f, 5.0f);
-		ImGui::SliderFloat("Light Orbit Radius", &lightOrbitRadius, 0.0f, 5.0f);
-		ImGui::SliderFloat("Light Orbit Speed", &lightOrbitSpeed, 0.0f, 3.0f);
+		ImGui::SliderFloat("Rim Threshold", &rimThres, 1.0f, 15.0f);
+		ImGui::SliderFloat("Rim CutOff", &rimCut, 0.1f, 1.5f);
 	}
 
 	if (ImGui::CollapsingHeader("Sobel Edge"))
@@ -247,13 +230,6 @@ void drawUI() {
 		ImGui::ColorEdit3("Edge Color", &edgeColor.r);
 		ImGui::SliderFloat("Outline Size X", &outlineX, 0.0f, 1.0f);
 		ImGui::SliderFloat("Outline Size Y", &outlineY, 0.0f, 1.0f);
-	}
-
-	if (ImGui::CollapsingHeader("Image Convolution")) {
-		ImGui::SliderInt("Effect", &kernal, 0.0f, 3.0f); //0 will give the blur effect, 1 will give the sharpen effect, 2 will give edge effect, 3 will give Gaussian blur
-		ImGui::SliderFloat("Intensity", &blurEffect, 0.0f, 8.0f);
-		ImGui::SliderFloat("Gamma Correction", &gamma, 0.0f, 8.0f);
-
 	}
 
 	if (ImGui::Button("Reset Camera")) {
