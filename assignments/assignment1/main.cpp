@@ -81,7 +81,7 @@ int main() {
 	monkeyTransform.position = glm::vec3(0.0f, 5.0f, 5.0f);
 	sandTransform.position = glm::vec3(3.0f, 0.0f, 0.0f);
 	christmasTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-	porceTransform.position = glm::vec3(6.0f, 0.0f, 0.0f);
+	porceTransform.position = glm::vec3(12.0f, -1.0f, 0.0f);
 	rockTransform.position = glm::vec3(-6.0f, 0.0f, 0.0f);
 	concreteTransform.position = glm::vec3(9.0f, 0.0f, 0.0f);
 	tileTransform.position = glm::vec3(-3.0f, 0.0f, 0.0f);
@@ -199,12 +199,6 @@ int main() {
 		outlineShader.setFloat("outlineY", outlineY);
 		outlineShader.setFloat("offset", offset);
 	
-	/*
-		ppShader.use();
-		ppShader.setFloat("_Blur", blurEffect);
-		ppShader.setFloat("_gamma", gamma);
-		ppShader.setInt("_Kernal", kernal);
-	*/
 		glBindTextureUnit(0, framebuffer.colorBuffer[0]);
 		glBindVertexArray(dummyVAO);
 		glActiveTexture(GL_TEXTURE1);
