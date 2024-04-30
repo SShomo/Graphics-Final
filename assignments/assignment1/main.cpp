@@ -61,7 +61,6 @@ int main() {
 
 	bob::Framebuffer framebuffer = bob::createFramebufferWithRBO(screenWidth, screenHeight, GL_RGB16F);
 	ew::Shader ppShader = ew::Shader("assets/pp.vert", "assets/pp.frag");
-	ew::Shader toonShader = ew::Shader("assets/toon.vert", "assets/toon.frag");
 	ew::Shader outlineShader = ew::Shader("assets/outline.vert", "assets/outline.frag");
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
 
@@ -81,10 +80,12 @@ int main() {
 	monkeyTransform.position = glm::vec3(0.0f, 5.0f, 5.0f);
 	sandTransform.position = glm::vec3(3.0f, 0.0f, 0.0f);
 	christmasTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-	porceTransform.position = glm::vec3(12.0f, -1.0f, 0.0f);
+	porceTransform.position = glm::vec3(9.0f, -1.0f, 0.0f);
 	rockTransform.position = glm::vec3(-6.0f, 0.0f, 0.0f);
-	concreteTransform.position = glm::vec3(9.0f, 0.0f, 0.0f);
+	concreteTransform.position = glm::vec3(6.0f, 0.0f, 0.0f);
 	tileTransform.position = glm::vec3(-3.0f, 0.0f, 0.0f);
+
+	christmasTransform.scale = glm::vec3(10.0f);
 
 	//christmasTransform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
@@ -147,7 +148,7 @@ int main() {
 		shader.setFloat("_Material.Ks", material.Ks);
 		shader.setFloat("_Material.Shininess", material.Shininess);
 
-		shader.setFloat("rimK", rimCut);
+		shader.setFloat("rimCut", rimCut);
 		shader.setFloat("rimThres", rimThres);
 		//shader.setMat4("_Model", monkeyTransform.modelMatrix());
 		//monkeyModel.draw(); //Draws monkey model using current shader
@@ -159,7 +160,7 @@ int main() {
 		glBindTextureUnit(0, christmasColor);
 		glBindTextureUnit(1, christmasNormalGL);
 		shader.setMat4("_Model", christmasTransform.modelMatrix());
-		monkeyModel.draw();
+		bunnyModel.draw();
 
 		glBindTextureUnit(0, porceColor);
 		glBindTextureUnit(1, porceNormalGL);
@@ -185,10 +186,10 @@ int main() {
 		//Spin all the models
 		christmasTransform.rotation = glm::rotate(christmasTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
 		sandTransform.rotation = glm::rotate(sandTransform.rotation, deltaTime, glm::vec3(0.1, 0.0, 0.0));
-		//rockTransform.rotation = glm::rotate(rockTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
-		//concreteTransform.rotation = glm::rotate(concreteTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
-		//tileTransform.rotation = glm::rotate(tileTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
-		//porceTransform.rotation = glm::rotate(porceTransform.rotation, deltaTime, glm::vec3(0.0, 0.5, 0.0));
+		tileTransform.position = glm::vec3(tileTransform.position.x, glm::sin(time * 2) * 2, 0.0f);
+		concreteTransform.position = glm::vec3(concreteTransform.position.x, glm::cos(time * 2) * 0.5, 0.0f);
+		porceTransform.position = glm::vec3(glm::sin(time * 2) * 2, 3.0f, 0.0f);
+		rockTransform.position = glm::vec3(glm::sin(time * 2) * 0.5f, -3.0f, 0.0f);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

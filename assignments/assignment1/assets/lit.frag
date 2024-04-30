@@ -65,4 +65,5 @@ void main(){
     lightColor = mix(vec3(0.2) * objectColor, lightColor * objectColor, temp);
 
 	FragColor = vec4(objectColor * lightColor,1.0);
+	//FragColor = vec4(fs_in.TexCoord, 0.0, 1.0);
 }
