@@ -228,8 +228,8 @@ void drawUI() {
 
 	if (ImGui::CollapsingHeader("Toon Shading"))
 	{
-		ImGui::SliderFloat("Rim Threshold", &rimThres, 1.0f, 15.0f);
-		ImGui::SliderFloat("Rim CutOff", &rimCut, 0.1f, 1.5f);
+		ImGui::SliderFloat("Rim Threshold", &rimThres, 0.0f, 15.0f);
+		ImGui::SliderFloat("Rim CutOff", &rimCut, -1.5f, 1.5f);
 	}
 
 	if (ImGui::CollapsingHeader("Sobel Edge"))

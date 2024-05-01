@@ -40,30 +40,28 @@ void main(){
 
 	//Light pointing straight down
 	vec3 objectColor = texture(_MainTex,fs_in.TexCoord).rgb;
-	vec3 toLight = -_LightDirection;
-	float diffuseFactor = max(dot(normal,toLight),0.0);
+	vec3 downLight = -_LightDirection;
+	float diffuseFactor = max(dot(normal,downLight),0.0);
 	//Calculate specularly reflected light
 	vec3 toEye = normalize(_EyePos - fs_in.WorldPos);
-	vec3 toligh = normalize(_LightPos - fs_in.WorldPos);
+	vec3 toLight = normalize(_LightPos - fs_in.WorldPos);
 	//Blinn-phong uses half angle
-	vec3 h = normalize(toLight + toEye);
+	vec3 h = normalize(downLight + toEye);
 	float specularFactor = pow(max(dot(normal,h),0.0),_Material.Shininess);
 	vec3 specular = smoothstep(0.005, 0.01, specularFactor) * objectColor;
 	//Combination of specular and diffuse reflection
 	vec3 lightColor = (_Material.Kd * diffuseFactor + _Material.Ks * specular) * _LightColor;
 	lightColor += _AmbientColor * _Material.Ka;
 
-	vec3 reflectDir = reflect(-toligh, normal);
-	toEye = normalize(toEye - reflectDir); //Gets the distance between the eye position and the reflect direction
-    float rim = dot(toEye, normal);
-    rim = 1 - max(0.0, rim);
-    float rimIntense = pow(rim, rimThres);
-    rimIntense = smoothstep(rimCut - 0.01, rimCut + 0.01, rimIntense);//Makes the rimm appear in a toon shaded style
-	lightColor += rimIntense;
 
-	float temp = smoothstep(0.0, 1.0, (intensity * 0.5) / rimCut + 0.5); //Makes the ambient shadows, but makes it a hard line between lit and unlit
-    lightColor = mix(vec3(0.2) * objectColor, lightColor * objectColor, temp);
+	// Toon Shading
+	float rimLight = 1.0 - max(dot(normalize(_EyePos - fs_in.WorldPos), normal), 0.0); // Calculate rim lighting based on angel between EyePos and nornmal
+    float rimIntensity = pow(rimLight, rimThres);
+    rimIntensity = smoothstep(rimCut - 0.01, rimCut + 0.01, rimIntensity); //Makes the rimmLight appear in a toon shaded style
+	lightColor += rimIntensity;
 
-	FragColor = vec4(objectColor * lightColor,1.0);
-	//FragColor = vec4(fs_in.TexCoord, 0.0, 1.0);
+	float rimShadow = smoothstep(0.0, 1.0, (intensity * 0.5) / rimCut + 0.5); //Makes the ambient shadows, but makes it a hard line between lit and unlit
+    lightColor = mix(vec3(0.2) * objectColor, lightColor * objectColor, rimShadow);
+
+	FragColor = vec4(objectColor * lightColor, 1.0);
 }
