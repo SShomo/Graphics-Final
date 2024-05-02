@@ -55,12 +55,12 @@ void main(){
 
 
 	// Toon Shading
-	float rimLight = 1.0 - max(dot(normalize(_EyePos - fs_in.WorldPos), normal), 0.0); // Calculate rim lighting based on angel between EyePos and nornmal
+	float rimLight = 1.0 - max(dot(normalize(_EyePos - fs_in.WorldPos), normal), 0.0); 
     float rimIntensity = pow(rimLight, rimThres);
-    rimIntensity = smoothstep(rimCut - 0.01, rimCut + 0.01, rimIntensity); //Makes the rimmLight appear in a toon shaded style
+    rimIntensity = smoothstep(rimCut - 0.01, rimCut + 0.01, rimIntensity); 
 	lightColor += rimIntensity;
 
-	float rimShadow = smoothstep(0.0, 1.0, (intensity * 0.5) / rimCut + 0.5); //Makes the ambient shadows, but makes it a hard line between lit and unlit
+	float rimShadow = smoothstep(0.0, 1.0, (intensity * 0.5) / rimCut + 0.5); 
     lightColor = mix(vec3(0.2) * objectColor, lightColor * objectColor, rimShadow);
 
 	FragColor = vec4(objectColor * lightColor, 1.0);
