@@ -66,7 +66,6 @@ int main() {
 
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
 	ew::Model bunnyModel = ew::Model("assets/bunny.obj");
-	ew::Model teaModel = ew::Model("assets/teapot.obj");
 
 	ew::Transform monkeyTransform;
 	ew::Transform sandTransform;
@@ -79,14 +78,10 @@ int main() {
 	monkeyTransform.position = glm::vec3(0.0f, 5.0f, 5.0f);
 	sandTransform.position = glm::vec3(3.0f, 0.0f, 0.0f);
 	christmasTransform.position = glm::vec3(0.0f, 0.0f, 0.0f);
-	//porceTransform.position = glm::vec3(9.0f, -1.0f, 0.0f);
+	porceTransform.position = glm::vec3(0.0f, 3.0f, 0.0f);
 	rockTransform.position = glm::vec3(-6.0f, 0.0f, 0.0f);
 	concreteTransform.position = glm::vec3(6.0f, 0.0f, 0.0f);
 	tileTransform.position = glm::vec3(-3.0f, 0.0f, 0.0f);
-
-	porceTransform.scale = glm::vec3(0.01f);
-
-	porceTransform.position = glm::vec3(900.0f, -100.0f, 0.0f);
 
 	camera.position = glm::vec3(0.0f, 0.0f, 5.0f);
 	camera.target = glm::vec3(0.0f, 0.0f, 0.0f); //Look at the center of the scene
@@ -164,7 +159,7 @@ int main() {
 		glBindTextureUnit(0, porceColor);
 		glBindTextureUnit(1, porceNormalGL);
 		shader.setMat4("_Model", porceTransform.modelMatrix());
-		teaModel.draw();
+		monkeyModel.draw();
 
 		glBindTextureUnit(0, rockColor);
 		glBindTextureUnit(1, rockNormalGL);
@@ -187,7 +182,7 @@ int main() {
 		sandTransform.rotation = glm::rotate(sandTransform.rotation, deltaTime, glm::vec3(0.1, 0.0, 0.0));
 		tileTransform.position = glm::vec3(tileTransform.position.x, glm::sin(time * 2) * 2, 0.0f);
 		concreteTransform.position = glm::vec3(concreteTransform.position.x, glm::cos(time * 2) * 0.5, 0.0f);
-		porceTransform.position = glm::vec3(glm::sin(time * 2) * 50.0f, 200.0f, 0.0f);
+		//porceTransform.position = glm::vec3(glm::sin(time * 2) * 50.0f, 200.0f, 0.0f);
 		rockTransform.position = glm::vec3(glm::sin(time * 2) * 0.5f, -1.0f, 0.0f);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
